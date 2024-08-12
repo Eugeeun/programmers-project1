@@ -1,0 +1,198 @@
+@import url('./variable.css');
+@import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@100..900&display=swap');
+
+/* [reset] */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  border: 1px solid lightgray;
+}
+
+body {
+  color: var(--default-black);
+}
+
+li {
+  list-style: none;
+}
+
+button {
+  border: none;
+  background: none;
+  outline: none;
+  font-family: 'Noto Sans KR', sans-serif;
+  color: inherit;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: var(--font-size-medium);
+}
+
+select {
+  border: none;
+  outline: none;
+}
+
+h1,
+h2 {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: var(--font-size-large);
+  font-weight: var(--font-weight-default);
+}
+
+span,
+p,
+select {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: var(--font-size-small);
+}
+
+header,
+section {
+  padding: var(--padding-default);
+  margin: 0 auto;
+}
+/*  */
+
+/* [reuse] */
+.max-width {
+  max-width: 1200px;
+}
+
+.highlight {
+  font-weight: var(--font-weight-extra-thick);
+  color: var(--primary-blue);
+}
+
+.selected {
+  color: var(--background-white);
+  background-color: var(--primary-blue);
+}
+/*  */
+
+/* [layout] */
+/* header */
+.header__wrap {
+  display: flex;
+  justify-items: flex-start;
+  align-items: center;
+  gap: var(--gap-default);
+  margin: auto;
+}
+
+.header__category-list {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--gap-default);
+}
+
+.header__category-item {
+  width: 100px;
+}
+
+.header__category-item button {
+  width: 100%;
+
+  /* 아래는 스타일에서 진행 */
+  padding: var(--padding-thin) var(--padding-default);
+  border: 1px solid var(--default-gray);
+  border-radius: var(--border-radius-default);
+}
+/*  */
+
+/* intro */
+.intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.intro__search-wrap {
+  flex: 4;
+  display: flex;
+}
+
+.intro__search-wrap > input {
+  flex: 1;
+}
+
+.intro__title {
+  flex: 6;
+}
+/*  */
+
+/* services-detail */
+.services-detail {
+  display: flex;
+}
+/*  */
+
+/* services */
+.services {
+  flex: 4;
+
+  /* style에서 진행 */
+  padding-left: 0;
+}
+
+.services__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-default);
+  max-height: 500px;
+  overflow-y: scroll;
+}
+
+.services__item {
+  display: flex;
+}
+
+.services__img {
+  flex: 1;
+  position: relative;
+}
+
+.services__img > img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.services__status {
+  position: absolute;
+  top: var(--gap-thin);
+  left: var(--gap-thin);
+}
+
+.services__info-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+/*  */
+
+/* detail */
+.detail {
+  flex: 6;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-default);
+
+  /* style에서 진행 */
+  padding-right: 0;
+}
+
+.detail__map {
+  flex: 6;
+}
+
+.detail__desc {
+  flex: 3;
+}
+/*  */
