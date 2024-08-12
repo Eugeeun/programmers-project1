@@ -4,6 +4,153 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title></title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/layout.css" />
   </head>
-  <body></body>
+  <body>
+    <header class="header">
+      <div class="header__wrap max-width">
+        <h1 class="header__logo"><img src="" alt="img" /></h1>
+        <ul class="header__category-list">
+          <li class="header__category-item">
+            <button class="selected" data-category="전체">전체</button>
+          </li>
+          <li class="header__category-item">
+            <button data-category="공예/취미">공예/취미</button>
+          </li>
+          <li class="header__category-item">
+            <button data-category="교양/어학">교양/어학</button>
+          </li>
+          <li class="header__category-item">
+            <button data-category="도시/농업">도시/농업</button>
+          </li>
+          <li class="header__category-item">
+            <button data-category="미술/제작">미술/제작</button>
+          </li>
+          <li class="header__category-item"><button data-category="스포츠">스포츠</button></li>
+          <li class="header__category-item"><button data-category="역사">역사</button></li>
+          <li class="header__category-item"><button data-category="자연과학">자연과학</button></li>
+          <li class="header__category-item">
+            <button data-category="전문자격증">전문자격증</button>
+          </li>
+          <li class="header__category-item">
+            <button data-category="정보/통신">정보/통신</button>
+          </li>
+          <li class="header__category-item">
+            <button data-category="청년/정보">청년/정보</button>
+          </li>
+          <li class="header__category-item"><button data-category="기타">기타</button></li>
+        </ul>
+      </div>
+    </header>
+    <main>
+      <section id="intro" class="intro max-width">
+        <div class="intro__search-wrap">
+          <select name="" id="intro__select">
+            <option value="지역명">지역명</option>
+          </select>
+          <input type="text" id="intro__search" />
+          <button class="intro__submit-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+        <h2 class="intro__title">
+          <p>서울특별시 <strong class="highlight">공공서비스</strong> 예약</p>
+          <p>이용하시려는 서비스를 빠르게 예약해보세요</p>
+        </h2>
+      </section>
+      <section class="services-detail max-width">
+        <section id="services" class="services">
+          <ul class="services__list">
+            <li class="services__item">
+              <div class="services__img">
+                <img src="./img/noimg.png" alt="img" />
+                <span class="services__status open">접수중</span>
+              </div>
+              <div class="services__info-wrap">
+                <span class="services__title">2024년 <느낌 있는 박물관> 교육생 모집 안내</span>
+                <span class="services__target">8세 이상</span>
+                <span class="services__period">2023-12-27 ~ 2025-02-28</span>
+                <span class="services__place">서울역사박물관</span>
+              </div>
+            </li>
+            <li class="services__item">
+              <div class="services__img">
+                <img src="./img/noimg.png" alt="img" />
+                <span class="services__status open">접수중</span>
+              </div>
+              <div class="services__info-wrap">
+                <span class="services__title">2024년 <느낌 있는 박물관> 교육생 모집 안내</span>
+                <span class="services__target">8세 이상</span>
+                <span class="services__period">2023-12-27 ~ 2025-02-28</span>
+                <span class="services__place">서울역사박물관</span>
+              </div>
+            </li>
+            <li class="services__item">
+              <div class="services__img">
+                <img src="./img/noimg.png" alt="img" />
+                <span class="services__status open">접수중</span>
+              </div>
+              <div class="services__info-wrap">
+                <span class="services__title">2024년 <느낌 있는 박물관> 교육생 모집 안내</span>
+                <span class="services__target">8세 이상</span>
+                <span class="services__period">2023-12-27 ~ 2025-02-28</span>
+                <span class="services__place">서울역사박물관</span>
+              </div>
+            </li>
+            <li class="services__item">
+              <div class="services__img">
+                <img src="./img/noimg.png" alt="img" />
+                <span class="services__status open">접수중</span>
+              </div>
+              <div class="services__info-wrap">
+                <span class="services__title">2024년 <느낌 있는 박물관> 교육생 모집 안내</span>
+                <span class="services__target">8세 이상</span>
+                <span class="services__period">2023-12-27 ~ 2025-02-28</span>
+                <span class="services__place">서울역사박물관</span>
+              </div>
+            </li>
+            <li class="services__item">
+              <div class="services__img">
+                <img src="./img/noimg.png" alt="img" />
+                <span class="services__status open">접수중</span>
+              </div>
+              <div class="services__info-wrap">
+                <span class="services__title">2024년 <느낌 있는 박물관> 교육생 모집 안내</span>
+                <span class="services__target">8세 이상</span>
+                <span class="services__period">2023-12-27 ~ 2025-02-28</span>
+                <span class="services__place">서울역사박물관</span>
+              </div>
+            </li>
+            <li class="services__item">
+              <div class="services__img">
+                <img src="./img/noimg.png" alt="img" />
+                <span class="services__status open">접수중</span>
+              </div>
+              <div class="services__info-wrap">
+                <span class="services__title">2024년 <느낌 있는 박물관> 교육생 모집 안내</span>
+                <span class="services__target">8세 이상</span>
+                <span class="services__period">2023-12-27 ~ 2025-02-28</span>
+                <span class="services__place">서울역사박물관</span>
+              </div>
+            </li>
+          </ul>
+        </section>
+        <section id="detail" class="detail">
+          <div id="detail__map" class="detail__map"></div>
+          <p class="detail__desc">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis, id? Delectus magni
+            fugit enim impedit dolore laborum, aperiam odit, quisquam ullam quos cupiditate dolor
+            illum. A, repellendus. Aperiam, suscipit vitae.
+          </p>
+          <a href="#" class="detail__reservation">예약하러가기</a>
+        </section>
+      </section>
+    </main>
+  </body>
 </html>
