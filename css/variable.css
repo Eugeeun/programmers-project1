@@ -1,0 +1,49 @@
+/* color */
+:root {
+  --background-white: #ffffff;
+  --primary-blue: #5e81f4;
+  --default-black: #323232;
+  --default-gray: #d9d9d9;
+}
+/*  */
+
+/* font */
+:root {
+  --font-size-micro: 0.5rem;
+  --font-size-small: 0.75rem;
+  --font-size-medium: 1rem;
+  --font-size-large: 1.5rem;
+  --font-size-extra-large: 2rem;
+
+  --font-weight-default: 400;
+  --font-weight-thin: 300;
+  --font-weight-thick: 500;
+  --font-weight-extra-thick: 600;
+  --font-weight-bold: 800;
+}
+/*  */
+
+/* padding, margin ... gap */
+:root {
+  --padding-default: 1rem;
+  --padding-thin: 0.5rem;
+  --padding-thick: 1.5rem;
+
+  --margin-default: 1rem;
+  --margin-thin: 0.5rem;
+  --margin-thick: 1.5rem;
+
+  --gap-default: 1rem;
+  --gap-thin: 0.5rem;
+  --gap-thick: 1.5rem;
+  --gap-extra-thick: 2rem;
+
+  --border-radius-default: 20px;
+  --border-radius-circle: 50%;
+}
+/*  */
+
+/* breakpoint */
+:root {
+}
+/*  */
