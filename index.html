@@ -4,20 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title></title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
     <link rel="stylesheet" href="./css/style.css" />
-    <link rel="stylesheet" href="./css/layout.css" />
   </head>
   <body>
     <header class="header">
       <div class="header__wrap max-width">
-        <h1 class="header__logo"><img src="" alt="img" /></h1>
+        <h1 class="header__logo"><img src="./img/logo.png" alt="img" /></h1>
         <ul class="header__category-list">
           <li class="header__category-item">
             <button class="selected" data-category="전체">전체</button>
@@ -57,7 +49,7 @@
             <option value="지역명">지역명</option>
           </select>
           <input type="text" id="intro__search" />
-          <button class="intro__submit-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+          <button class="intro__submit-btn"><img src="./img/search.png" alt="" /></button>
         </div>
         <h2 class="intro__title">
           <p>서울특별시 <strong class="highlight">공공서비스</strong> 예약</p>
@@ -74,9 +66,89 @@
               </div>
               <div class="services__info-wrap">
                 <span class="services__title">2024년 <느낌 있는 박물관> 교육생 모집 안내</span>
-                <span class="services__target">8세 이상</span>
-                <span class="services__period">2023-12-27 ~ 2025-02-28</span>
-                <span class="services__place">서울역사박물관</span>
+                <div class="services__detail-info-wrap">
+                  <div class="services__target-wrap">
+                    <img src="./img/user.png" alt="" />
+                    <span class="services__target">8세 이상</span>
+                  </div>
+                  <div class="services__place">
+                    <img src="./img/calendar.png" alt="" />
+                    <span class="services__place">서울역사박물관</span>
+                  </div>
+                  <div class="services__period-wrap">
+                    <img src="./img/pin.png" alt="" />
+                    <span class="services__period">2023-12-27 ~ 2025-02-28</span>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="services__item">
+              <div class="services__img">
+                <img src="./img/noimg.png" alt="img" />
+                <span class="services__status pause">일시중지</span>
+              </div>
+              <div class="services__info-wrap">
+                <span class="services__title">2024년 <느낌 있는 박물관> 교육생 모집 안내</span>
+                <div class="services__detail-info-wrap">
+                  <div class="services__target-wrap">
+                    <img src="./img/user.png" alt="" />
+                    <span class="services__target">8세 이상</span>
+                  </div>
+                  <div class="services__place">
+                    <img src="./img/calendar.png" alt="" />
+                    <span class="services__place">서울역사박물관</span>
+                  </div>
+                  <div class="services__period-wrap">
+                    <img src="./img/pin.png" alt="" />
+                    <span class="services__period">2023-12-27 ~ 2025-02-28</span>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="services__item">
+              <div class="services__img">
+                <img src="./img/noimg.png" alt="img" />
+                <span class="services__status guidance">안내중</span>
+              </div>
+              <div class="services__info-wrap">
+                <span class="services__title">2024년 <느낌 있는 박물관> 교육생 모집 안내</span>
+                <div class="services__detail-info-wrap">
+                  <div class="services__target-wrap">
+                    <img src="./img/user.png" alt="" />
+                    <span class="services__target">8세 이상</span>
+                  </div>
+                  <div class="services__place">
+                    <img src="./img/calendar.png" alt="" />
+                    <span class="services__place">서울역사박물관</span>
+                  </div>
+                  <div class="services__period-wrap">
+                    <img src="./img/pin.png" alt="" />
+                    <span class="services__period">2023-12-27 ~ 2025-02-28</span>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="services__item">
+              <div class="services__img">
+                <img src="./img/noimg.png" alt="img" />
+                <span class="services__status full">예약마감</span>
+              </div>
+              <div class="services__info-wrap">
+                <span class="services__title">2024년 <느낌 있는 박물관> 교육생 모집 안내</span>
+                <div class="services__detail-info-wrap">
+                  <div class="services__target-wrap">
+                    <img src="./img/user.png" alt="" />
+                    <span class="services__target">8세 이상</span>
+                  </div>
+                  <div class="services__place">
+                    <img src="./img/calendar.png" alt="" />
+                    <span class="services__place">서울역사박물관</span>
+                  </div>
+                  <div class="services__period-wrap">
+                    <img src="./img/pin.png" alt="" />
+                    <span class="services__period">2023-12-27 ~ 2025-02-28</span>
+                  </div>
+                </div>
               </div>
             </li>
             <li class="services__item">
@@ -86,58 +158,28 @@
               </div>
               <div class="services__info-wrap">
                 <span class="services__title">2024년 <느낌 있는 박물관> 교육생 모집 안내</span>
-                <span class="services__target">8세 이상</span>
-                <span class="services__period">2023-12-27 ~ 2025-02-28</span>
-                <span class="services__place">서울역사박물관</span>
+                <div class="services__detail-info-wrap">
+                  <div class="services__target-wrap">
+                    <img src="./img/user.png" alt="" />
+                    <span class="services__target">8세 이상</span>
+                  </div>
+                  <div class="services__place">
+                    <img src="./img/calendar.png" alt="" />
+                    <span class="services__place">서울역사박물관</span>
+                  </div>
+                  <div class="services__period-wrap">
+                    <img src="./img/pin.png" alt="" />
+                    <span class="services__period">2023-12-27 ~ 2025-02-28</span>
+                  </div>
+                </div>
               </div>
             </li>
-            <li class="services__item">
-              <div class="services__img">
-                <img src="./img/noimg.png" alt="img" />
-                <span class="services__status open">접수중</span>
-              </div>
-              <div class="services__info-wrap">
-                <span class="services__title">2024년 <느낌 있는 박물관> 교육생 모집 안내</span>
-                <span class="services__target">8세 이상</span>
-                <span class="services__period">2023-12-27 ~ 2025-02-28</span>
-                <span class="services__place">서울역사박물관</span>
-              </div>
-            </li>
-            <li class="services__item">
-              <div class="services__img">
-                <img src="./img/noimg.png" alt="img" />
-                <span class="services__status open">접수중</span>
-              </div>
-              <div class="services__info-wrap">
-                <span class="services__title">2024년 <느낌 있는 박물관> 교육생 모집 안내</span>
-                <span class="services__target">8세 이상</span>
-                <span class="services__period">2023-12-27 ~ 2025-02-28</span>
-                <span class="services__place">서울역사박물관</span>
-              </div>
-            </li>
-            <li class="services__item">
-              <div class="services__img">
-                <img src="./img/noimg.png" alt="img" />
-                <span class="services__status open">접수중</span>
-              </div>
-              <div class="services__info-wrap">
-                <span class="services__title">2024년 <느낌 있는 박물관> 교육생 모집 안내</span>
-                <span class="services__target">8세 이상</span>
-                <span class="services__period">2023-12-27 ~ 2025-02-28</span>
-                <span class="services__place">서울역사박물관</span>
-              </div>
-            </li>
-            <li class="services__item">
-              <div class="services__img">
-                <img src="./img/noimg.png" alt="img" />
-                <span class="services__status open">접수중</span>
-              </div>
-              <div class="services__info-wrap">
-                <span class="services__title">2024년 <느낌 있는 박물관> 교육생 모집 안내</span>
-                <span class="services__target">8세 이상</span>
-                <span class="services__period">2023-12-27 ~ 2025-02-28</span>
-                <span class="services__place">서울역사박물관</span>
-              </div>
+            <li class="services__pagination-wrap">
+              <button class="services__prev"><img src="./img/left-arrow.png" alt="" /></button>
+              <button class="services__page">1</button>
+              <button class="services__page">2</button>
+              <button class="services__page">3</button>
+              <button class="services__prev"><img src="./img/right-arrow.png" alt="" /></button>
             </li>
           </ul>
         </section>
