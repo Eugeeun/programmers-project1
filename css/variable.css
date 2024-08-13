@@ -3,7 +3,9 @@
   --background-white: #ffffff;
   --primary-blue: #5e81f4;
   --default-black: #323232;
-  --default-gray: #d9d9d9;
+  --color-gray: #d9d9d9;
+  --color-pause: #e85d36;
+  --color-full: #666666;
 }
 /*  */
 
@@ -45,5 +47,8 @@
 
 /* breakpoint */
 :root {
+  --width-monitor: 1400px;
+  --width-tablet: 768px;
+  --width-mobile: 425px;
 }
 /*  */
