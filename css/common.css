@@ -1,5 +1,5 @@
 @import url('./variable.css');
-@import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
 
 /* [reset] */
 * {
@@ -11,6 +11,7 @@
 
 body {
   color: var(--default-black);
+  margin: auto;
 }
 
 li {
@@ -60,7 +61,8 @@ section {
 
 /* [reuse] */
 .max-width {
-  max-width: 1200px;
+  max-width: 1400px;
+  width: 80%;
 }
 
 .highlight {
@@ -72,6 +74,19 @@ section {
   color: var(--background-white);
   background-color: var(--primary-blue);
 }
+
+.pause {
+  background-color: var(--color-pause);
+}
+
+.open,
+.guidance {
+  background-color: var(--primary-blue);
+}
+.full {
+  background-color: var(--color-full);
+}
+
 /*  */
 
 /* [layout] */
@@ -82,6 +97,12 @@ section {
   align-items: center;
   gap: var(--gap-default);
   margin: auto;
+}
+
+.header__logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .header__category-list {
@@ -97,11 +118,6 @@ section {
 
 .header__category-item button {
   width: 100%;
-
-  /* 아래는 스타일에서 진행 */
-  padding: var(--padding-thin) var(--padding-default);
-  border: 1px solid var(--default-gray);
-  border-radius: var(--border-radius-default);
 }
 /*  */
 
@@ -135,9 +151,6 @@ section {
 /* services */
 .services {
   flex: 4;
-
-  /* style에서 진행 */
-  padding-left: 0;
 }
 
 .services__list {
@@ -150,6 +163,7 @@ section {
 
 .services__item {
   display: flex;
+  height: 160px;
 }
 
 .services__img {
@@ -174,6 +188,20 @@ section {
   flex: 1;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+}
+
+.services__detail-info-wrap img {
+  font-size: var(--font-size-small);
+  width: var(--font-size-small);
+  /* border: 1px solid blueviolet; */
+}
+
+.services__pagination-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-default);
 }
 /*  */
 
@@ -183,9 +211,6 @@ section {
   display: flex;
   flex-direction: column;
   gap: var(--gap-default);
-
-  /* style에서 진행 */
-  padding-right: 0;
 }
 
 .detail__map {
@@ -194,5 +219,10 @@ section {
 
 .detail__desc {
   flex: 3;
+}
+
+.detail__reservation {
+  width: 150px;
+  margin-left: auto;
 }
 /*  */
