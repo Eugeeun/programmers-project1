@@ -118,13 +118,6 @@ section {
   align-items: center;
 }
 
-.header__category-list {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--gap-default);
-}
-
 .header__category-item {
   width: 100px;
 }
