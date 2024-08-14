@@ -5,41 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title></title>
     <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
+    <script type="module" src="./js/main.js" defer></script>
   </head>
   <body>
     <header class="header">
       <div class="header__wrap max-width">
         <h1 class="header__logo"><img src="./img/logo.png" alt="img" /></h1>
-        <ul class="header__category-list">
-          <li class="header__category-item">
-            <button class="selected" data-category="전체">전체</button>
-          </li>
-          <li class="header__category-item">
-            <button data-category="공예/취미">공예/취미</button>
-          </li>
-          <li class="header__category-item">
-            <button data-category="교양/어학">교양/어학</button>
-          </li>
-          <li class="header__category-item">
-            <button data-category="도시/농업">도시/농업</button>
-          </li>
-          <li class="header__category-item">
-            <button data-category="미술/제작">미술/제작</button>
-          </li>
-          <li class="header__category-item"><button data-category="스포츠">스포츠</button></li>
-          <li class="header__category-item"><button data-category="역사">역사</button></li>
-          <li class="header__category-item"><button data-category="자연과학">자연과학</button></li>
-          <li class="header__category-item">
-            <button data-category="전문자격증">전문자격증</button>
-          </li>
-          <li class="header__category-item">
-            <button data-category="정보/통신">정보/통신</button>
-          </li>
-          <li class="header__category-item">
-            <button data-category="청년/정보">청년/정보</button>
-          </li>
-          <li class="header__category-item"><button data-category="기타">기타</button></li>
-        </ul>
+        <div class="swiper header__category-list">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide">
+              <div class="header__category-item">
+                <button class="selected" data-category="전체">전체</button>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="header__category-item">
+                <button data-category="공예/취미">공예/취미</button>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="header__category-item">
+                <button data-category="교양/어학">교양/어학</button>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="header__category-item">
+                <button data-category="도시/농업">도시/농업</button>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="header__category-item">
+                <button data-category="미술/제작">미술/제작</button>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="header__category-item">
+                <button data-category="스포츠">스포츠</button>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="header__category-item"><button data-category="역사">역사</button></div>
+            </div>
+            <div class="swiper-slide">
+              <div class="header__category-item">
+                <button data-category="자연과학">자연과학</button>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="header__category-item">
+                <button data-category="전문자격증">전문자격증</button>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="header__category-item">
+                <button data-category="정보/통신">정보/통신</button>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="header__category-item">
+                <button data-category="청년/정보">청년/정보</button>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="header__category-item"><button data-category="기타">기타</button></div>
+            </div>
+          </div>
+        </div>
       </div>
     </header>
     <main>
@@ -176,7 +209,7 @@
             </li>
             <li class="services__pagination-wrap">
               <button class="services__prev"><img src="./img/left-arrow.png" alt="" /></button>
-              <button class="services__page">1</button>
+              <button class="services__page selected">1</button>
               <button class="services__page">2</button>
               <button class="services__page">3</button>
               <button class="services__prev"><img src="./img/right-arrow.png" alt="" /></button>
@@ -190,7 +223,7 @@
             fugit enim impedit dolore laborum, aperiam odit, quisquam ullam quos cupiditate dolor
             illum. A, repellendus. Aperiam, suscipit vitae.
           </p>
-          <a href="#" class="detail__reservation">예약하러가기</a>
+          <a href="#" class="detail__reservation selected">예약하러가기</a>
         </section>
       </section>
     </main>
