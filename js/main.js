@@ -1,6 +1,6 @@
 'use strict';
 
-import { BASE_URL } from './config.js';
+import { BASE_URL, SERVICES_KEY } from './config.js';
 
 const PAGE_SIZE = 15;
 let page = 1; // currentPage
@@ -64,12 +64,38 @@ const createHtml = item => {
           </div>
           <div class="services__period-wrap">
             <img src="./img/pin.png" alt="" />
-            <span class="services__period">${SVCOPNBGNDT} ~ ${SVCOPNENDDT}</span>
+            <span class="services__period">
+            ${SVCOPNBGNDT.slice(0, 11)} ~ ${SVCOPNENDDT.slice(0, 11)}
+            </span>
           </div>
         </div>
       </div>
     </li>
   `;
+};
+
+// get location and details of Service from localStorage
+const getServices = () => JSON.parse(localStorage.getItem(SERVICES_KEY)) || [];
+
+// save location and details of Service to localStorage
+const saveServices = services => {
+  localStorage.setItem(SERVICES_KEY, JSON.stringify(services));
+};
+
+// update localStorage
+const setServices = item => {
+  const { SVCID, DTLCONT, X, Y, SVCURL } = item;
+  const newService = {
+    id: SVCID,
+    value: DTLCONT,
+    x: X,
+    y: Y,
+    url: SVCURL,
+  };
+  // TODO: 3번 상세내용만 걸러내고 img는 걸러내야됨
+  // console.log(newService);
+
+  saveServices([...getServices(), newService]);
 };
 
 const createPageBtn = () => {
@@ -101,6 +127,7 @@ const paintHtmlToServiceList = itemList => {
 
   // TODO: Save detail data and location to localStorage
   const serviceList = itemList.map(createHtml).join('');
+  itemList.forEach(setServices);
 
   // Add pagination at last of element
   $target.innerHTML = serviceList + getPagination();
