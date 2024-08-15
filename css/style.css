@@ -111,6 +111,8 @@
   color: var(--background-white);
   padding: calc(var(--padding-thin) / 2) var(--padding-thin);
   border-radius: var(--border-radius-default);
+  width: 65px;
+  text-align: center;
 }
 
 .services__info-wrap {
@@ -130,6 +132,7 @@
 .services__pagination-wrap > button {
   width: 25px;
   height: 25px;
+  cursor: pointer;
 }
 
 .services__page {
