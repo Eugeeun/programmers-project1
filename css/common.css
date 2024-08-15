@@ -166,13 +166,15 @@ section {
 /* services */
 .services {
   flex: 4;
+  max-height: 70vh;
+  max-width: 40%;
 }
 
 .services__list {
   display: flex;
   flex-direction: column;
   gap: var(--gap-default);
-  max-height: 500px;
+  max-height: 65vh;
 }
 
 .services__item {
@@ -234,17 +236,28 @@ section {
   display: flex;
   flex-direction: column;
   gap: var(--gap-default);
+  max-height: 70vh;
+  max-width: 60%;
 }
 
 .detail__map {
   flex: 6;
+  max-height: 100%;
 }
 
 .detail__desc {
+  display: none;
   flex: 3;
+  max-height: 30%;
+  overflow-y: scroll;
+}
+
+.detail__desc::-webkit-scrollbar {
+  display: none;
 }
 
 .detail__reservation {
+  display: none;
   width: 150px;
   margin-left: auto;
 }
@@ -254,7 +267,6 @@ section {
 ::-webkit-scrollbar {
   width: 12px;
   height: 12px;
-  padding-top: 20px;
 }
 
 ::-webkit-scrollbar-thumb {
