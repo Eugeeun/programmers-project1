@@ -92,7 +92,8 @@ section {
   background-color: var(--primary-blue);
 }
 
-.full {
+.full,
+.closed {
   background-color: var(--color-full);
 }
 
