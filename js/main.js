@@ -3,6 +3,9 @@
 import { BASE_URL, SERVICES_KEY } from './config.js';
 
 const $categoryCon = document.querySelector('.swiper-wrapper');
+const $select = document.querySelector('#intro__select');
+const $input = document.querySelector('#intro__search');
+const $submitBtn = document.querySelector('.intro__submit-btn > img');
 
 const PAGE_SIZE = 15;
 let page = 1; // currentPage
@@ -252,9 +255,31 @@ const getServiceList = async (url) => {
 $categoryCon.addEventListener('click', (e) => {
   if (e.target.tagName !== 'BUTTON') return;
   console.log(e.target.dataset.category);
+
+  const $$categoryBtns = $categoryCon.querySelectorAll('button');
+  $$categoryBtns.forEach((btn) => btn.classList.remove('selected'));
+  e.target.classList.add('selected');
+
   const category = e.target.dataset.category;
-  searchParams.minclass = category.split('/')[0];
+  searchParams.minclass = category === '전체' ? '' : category.split('/')[0];
+  searchParams.area = '';
+  searchParams.svcname = '';
+  $input.value = '';
   page = 1;
+  updateSearchParams();
+  initializeServiceList(BASE_URL);
+});
+
+$submitBtn.addEventListener('click', (e) => {
+  console.log($select.value);
+  console.log($input.value);
+
+  searchParams.area = '';
+  searchParams.svcname = '';
+  page = 1;
+
+  searchParams[$select.value] = $input.value;
+
   updateSearchParams();
   initializeServiceList(BASE_URL);
 });
