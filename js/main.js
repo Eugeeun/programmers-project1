@@ -1,6 +1,6 @@
 'use strict';
 
-import { BASE_URL, SERVICES_KEY } from './config.js';
+import { BASE_URL, SERVICES_KEY, KAKAO_MAP_URL } from './config.js';
 
 const $categoryCon = document.querySelector('.swiper-wrapper');
 const $select = document.querySelector('#intro__select');
@@ -25,6 +25,9 @@ const dir = {
   prev: 0,
   next: 1,
 };
+
+let map;
+let marker;
 
 const updateSearchParams = () => {
   searchParams.pageBegin = (page - 1) * PAGE_SIZE + 1;
@@ -233,12 +236,19 @@ const displayDetails = (e) => {
   $map.style.maxHeight = '60%';
   $desc.style.display = 'block';
   $link.style.display = 'block';
+  removeMarker();
+  map.setCenter(new kakao.maps.LatLng(data.y, data.x));
+  setMarker(new kakao.maps.LatLng(data.y, data.x));
 };
 
 // 서비스 리스트 받아오기
 const getServiceList = async (url) => {
   const KEY = 'ListPublicReservationEducation';
-  const newUrl = url + Object.values(searchParams).join('/');
+  const newUrl =
+    url +
+    Object.values(searchParams)
+      .map((param) => param || '%20')
+      .join('/');
   console.log(newUrl);
 
   try {
@@ -301,3 +311,53 @@ const initializeServiceList = (baseUrl) => {
 
 // 사용 예시
 initializeServiceList(BASE_URL);
+
+// TODO: refactoring
+const loadKakaoMaps = () => {
+  const script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = KAKAO_MAP_URL;
+  document.head.appendChild(script);
+
+  script.onload = function () {
+    // API가 로드된 후, kakao.maps.load를 사용하여 초기화
+    kakao.maps.load(function () {
+      initializeMap();
+    });
+  };
+
+  script.onerror = function () {
+    console.error('Kakao Maps API 로드 중 오류가 발생했습니다.');
+  };
+};
+
+loadKakaoMaps();
+
+const initializeMap = () => {
+  const mapContainer = document.getElementById('detail__map'); // HTML에 <div id="map"></div>가 필요합니다.
+
+  // 지도 옵션 설정
+  const mapOptions = {
+    center: new kakao.maps.LatLng(37.5665, 126.978), // 서울의 위도와 경도
+    level: 3, // 지도의 확대 수준
+  };
+
+  // 지도 생성
+  map = new kakao.maps.Map(mapContainer, mapOptions);
+
+  const [x, y] = [126.978, 37.5665];
+  setMarker(new kakao.maps.LatLng(y, x));
+};
+
+const setMarker = (position) => {
+  marker = new kakao.maps.Marker({
+    position: position,
+  });
+
+  // 마커를 지도에 표시
+  marker.setMap(map);
+};
+
+const removeMarker = () => {
+  if (marker) marker.setMap(null);
+};
