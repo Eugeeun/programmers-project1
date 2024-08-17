@@ -244,7 +244,11 @@ const displayDetails = (e) => {
 // 서비스 리스트 받아오기
 const getServiceList = async (url) => {
   const KEY = 'ListPublicReservationEducation';
-  const newUrl = url + Object.values(searchParams).join('/');
+  const newUrl =
+    url +
+    Object.values(searchParams)
+      .map((param) => param || '%20')
+      .join('/');
   console.log(newUrl);
 
   try {
