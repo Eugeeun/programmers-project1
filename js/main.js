@@ -152,6 +152,20 @@ const movePage = dir => {
 const paintHtmlToServiceList = itemList => {
   const $target = document.querySelector('.services__list');
 
+  if (!itemList) {
+    $target.innerHTML = `
+    <li class="services__item shadow">
+      <div class="services__img">
+        <img src="./img/noimg.png" alt="img" />
+      </div>
+      <div class="services__info-wrap">
+        <span class="services__title">데이터가 존재하지 않습니다.</span>
+      </div>
+    </li>
+    `;
+    return false;
+  }
+
   // Save detail data and location to localStorage
   const serviceList = itemList.map(createHtml).join('');
   saveServices([]);
@@ -174,6 +188,7 @@ const paintHtmlToServiceList = itemList => {
   document.querySelector('.services__next').addEventListener('click', () => {
     movePage(dir.next);
   });
+  return true;
 };
 
 const filterDesc = desc => {
@@ -313,7 +328,8 @@ $input.addEventListener('keydown', e => {
 const initializeServiceList = baseUrl => {
   getServiceList(baseUrl)
     .then(paintHtmlToServiceList)
-    .then(() => {
+    .then(flag => {
+      if (!flag) return;
       const $$services = document.querySelectorAll('.services__item');
       $$services.forEach($service => {
         $service.addEventListener('click', displayDetails);
