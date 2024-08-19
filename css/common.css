@@ -126,6 +126,14 @@ section {
 .header__category-item button {
   width: 100%;
 }
+
+.header__close-menu-btn {
+  position: absolute;
+  top: var(--padding-default);
+  right: var(--padding-default);
+  z-index: 100;
+  padding: var(--padding-default);
+}
 /*  */
 
 /* intro */
@@ -144,6 +152,7 @@ section {
 
 .intro__search-wrap > input {
   flex: 1;
+  width: 100%;
 }
 
 .intro__submit-btn {
@@ -260,6 +269,13 @@ section {
   display: none;
   width: 150px;
   margin-left: auto;
+}
+
+.detail__close-btn {
+  position: absolute;
+  top: var(--padding-thin);
+  right: var(--padding-thin);
+  padding: var(--padding-thin);
 }
 /*  */
 
