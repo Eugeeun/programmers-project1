@@ -129,10 +129,10 @@ section {
 
 .header__close-menu-btn {
   position: absolute;
-  top: var(--padding-default);
-  right: var(--padding-default);
+  top: var(--padding-thin);
+  right: var(--padding-thin);
   z-index: 100;
-  padding: var(--padding-default);
+  padding: var(--padding-thin);
 }
 /*  */
 

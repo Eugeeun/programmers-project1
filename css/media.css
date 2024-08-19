@@ -89,14 +89,11 @@
     display: block;
   }
 
-  /* TODO: 최대 크기 맞추기 */
-
   .intro > .intro__title > p {
     font-size: calc(var(--font-size-large) * 0.8);
   }
 
   .intro > .intro__search-wrap {
-    /* width: auto; */
     width: 100%;
   }
 
@@ -125,6 +122,7 @@
     /* display: none; */
     background-color: var(--background-white);
     transform: translateY(100%);
+    transition: all 0.3s;
   }
 
   .services-detail > .detail.display {
