@@ -2,6 +2,7 @@
 
 import { BASE_URL, SERVICES_KEY, KAKAO_MAP_URL } from './config.js';
 
+// DOM 요소 선택
 const $categoryCon = document.querySelector('.swiper-wrapper');
 const $select = document.querySelector('#intro__select');
 const $input = document.querySelector('#intro__search');
@@ -10,17 +11,18 @@ const $$categoryList = document.querySelector('.header__category-list');
 const $closeBtn = document.querySelector('.header__close-menu-btn');
 const $logo = document.querySelector('.header__logo');
 
+// 상수 및 변수
 const PAGE_SIZE = 15;
+const GROUP_SIZE = 3;
 let page = 1; // currentPage
 let totalResults = null;
-let groupSize = 3;
 
 const searchParams = {
   pageBegin: (page - 1) * PAGE_SIZE + 1,
   pageEnd: page * PAGE_SIZE,
   minclass: '', // category
   svcname: '',
-  target: '', // not use
+  target: '',
   area: '',
 };
 
@@ -32,13 +34,8 @@ const dir = {
 let map;
 let marker;
 
-const updateSearchParams = () => {
-  searchParams.pageBegin = (page - 1) * PAGE_SIZE + 1;
-  searchParams.pageEnd = page * PAGE_SIZE;
-};
-
-// 슬라이더 생성
-let swiper = new Swiper('.header__category-list', {
+// Swiper 초기화
+const swiper = new Swiper('.header__category-list', {
   slidesPerView: 'auto',
   spaceBetween: 20,
   freeMode: true,
@@ -47,19 +44,46 @@ let swiper = new Swiper('.header__category-list', {
   freeModeMomentum: false,
 });
 
+// Helper 함수 정의
+const updateSearchParams = () => {
+  searchParams.pageBegin = (page - 1) * PAGE_SIZE + 1;
+  searchParams.pageEnd = page * PAGE_SIZE;
+};
+
+const resetSearchParams = () => {
+  searchParams.area = '';
+  searchParams.svcname = '';
+  page = 1;
+};
+
+const updateSearchParamsAndInitialize = () => {
+  searchParams[$select.value] = $input.value;
+  updateSearchParams();
+  initializeServiceList(BASE_URL);
+};
+
+const applyCategorySelection = category => {
+  searchParams.minclass = category === '전체' ? '' : category.split('/')[0];
+  resetSearchParams();
+  updateSearchParams();
+  initializeServiceList(BASE_URL);
+  $input.value = '';
+};
+
+const toggleCategoryList = show => {
+  $$categoryList.classList.toggle('active', show);
+  $closeBtn.style.display = show ? 'block' : 'none';
+};
+
 const getStatus = status => {
-  switch (status) {
-    case '접수중':
-      return ['open', status];
-    case '예약마감':
-      return ['full', status];
-    case '접수종료':
-      return ['closed', status];
-    case '예약일시중지':
-      return ['pause', '일시중지'];
-    case '안내중':
-      return ['guidance', status];
-  }
+  const statusMap = {
+    접수중: ['open', '접수중'],
+    예약마감: ['full', '예약마감'],
+    접수종료: ['closed', '접수종료'],
+    예약일시중지: ['pause', '일시중지'],
+    안내중: ['guidance', '안내중'],
+  };
+  return statusMap[status] || ['unknown', '알 수 없음'];
 };
 
 const createHtml = item => {
@@ -86,7 +110,7 @@ const createHtml = item => {
           <div class="services__period-wrap">
             <img src="./img/pin.png" alt="" />
             <span class="services__period">
-            ${SVCOPNBGNDT.slice(0, 11)} ~ ${SVCOPNENDDT.slice(0, 11)}
+              ${SVCOPNBGNDT.slice(0, 11)} ~ ${SVCOPNENDDT.slice(0, 11)}
             </span>
           </div>
         </div>
@@ -95,41 +119,55 @@ const createHtml = item => {
   `;
 };
 
-// get location and details of Service from localStorage
-const getServices = () => JSON.parse(localStorage.getItem(SERVICES_KEY)) || [];
+const paintHtmlToServiceList = itemList => {
+  const $target = document.querySelector('.services__list');
 
-// save location and details of Service to localStorage
-const saveServices = services => {
-  localStorage.setItem(SERVICES_KEY, JSON.stringify(services));
-};
+  if (!itemList || itemList.length === 0) {
+    $target.innerHTML = `
+      <li class="services__item shadow">
+        <div class="services__img">
+          <img src="./img/noimg.png" alt="img" />
+        </div>
+        <div class="services__info-wrap">
+          <span class="services__title">데이터가 존재하지 않습니다.</span>
+        </div>
+      </li>
+    `;
+    return false;
+  }
 
-// update localStorage
-const setServices = item => {
-  const { SVCID, DTLCONT, X, Y, SVCURL } = item;
-  const newService = {
-    id: SVCID,
-    desc: DTLCONT,
-    x: X,
-    y: Y,
-    url: SVCURL,
-  };
-  saveServices([...getServices(), newService]);
-};
+  saveServices([]);
+  itemList.forEach(setServices);
 
-const createPageBtn = () => {
-  const totalPage = Math.ceil(totalResults / PAGE_SIZE); // 총 페이지 수
-  const pageGroup = Math.ceil(page / groupSize); // 현재 페이지가 속해있는 그룹
-  const firstPage = (pageGroup - 1) * groupSize + 1;
-  const lastPage = Math.min(totalPage, pageGroup * groupSize);
+  $target.innerHTML = itemList.map(createHtml).join('') + getPagination();
 
-  return Array.from({ length: lastPage - firstPage + 1 }, (_, index) => {
-    const pageNumber = firstPage + index;
-    const isActive = pageNumber === +page ? 'selected' : '';
-    return `<button class="services__page ${isActive}">${pageNumber}</button>`;
-  }).join('');
+  document.querySelectorAll('.services__page').forEach($paginationBtn =>
+    $paginationBtn.addEventListener('click', e => {
+      page = parseInt(e.target.innerText, 10);
+      updateSearchParams();
+      initializeServiceList(BASE_URL);
+    })
+  );
+
+  document.querySelector('.services__prev').addEventListener('click', () => movePage(dir.prev));
+  document.querySelector('.services__next').addEventListener('click', () => movePage(dir.next));
+
+  return true;
 };
 
 const getPagination = () => {
+  const totalPage = Math.ceil(totalResults / PAGE_SIZE);
+  const pageGroup = Math.ceil(page / GROUP_SIZE);
+  const firstPage = (pageGroup - 1) * GROUP_SIZE + 1;
+  const lastPage = Math.min(totalPage, pageGroup * GROUP_SIZE);
+
+  const createPageBtn = () =>
+    Array.from({ length: lastPage - firstPage + 1 }, (_, index) => {
+      const pageNumber = firstPage + index;
+      const isActive = pageNumber === page ? 'selected' : '';
+      return `<button class="services__page ${isActive}">${pageNumber}</button>`;
+    }).join('');
+
   return `
     <li class="services__pagination-wrap">
       <button class="services__prev"><img src="./img/left-arrow.png" alt="" /></button>
@@ -140,7 +178,7 @@ const getPagination = () => {
 };
 
 const movePage = dir => {
-  const nextPage = (Math.ceil(page / groupSize) - !dir) * groupSize + dir;
+  const nextPage = (Math.ceil(page / GROUP_SIZE) - !dir) * GROUP_SIZE + dir;
   if (nextPage < 1 || nextPage > Math.ceil(totalResults / PAGE_SIZE)) return;
 
   page = nextPage;
@@ -148,72 +186,23 @@ const movePage = dir => {
   initializeServiceList(BASE_URL);
 };
 
-// 받아온 리스트로 HTML 그리기
-const paintHtmlToServiceList = itemList => {
-  const $target = document.querySelector('.services__list');
-
-  if (!itemList) {
-    $target.innerHTML = `
-    <li class="services__item shadow">
-      <div class="services__img">
-        <img src="./img/noimg.png" alt="img" />
-      </div>
-      <div class="services__info-wrap">
-        <span class="services__title">데이터가 존재하지 않습니다.</span>
-      </div>
-    </li>
-    `;
-    return false;
-  }
-
-  // Save detail data and location to localStorage
-  const serviceList = itemList.map(createHtml).join('');
-  saveServices([]);
-  itemList.forEach(setServices);
-
-  // Add pagination at last of element
-  $target.innerHTML = serviceList + getPagination();
-  const $$paginationBtns = document.querySelectorAll('.services__page');
-  $$paginationBtns.forEach($paginationBtn => {
-    $paginationBtn.addEventListener('click', e => {
-      page = e.target.innerText;
-      updateSearchParams();
-      initializeServiceList(BASE_URL);
-    });
-  });
-
-  document.querySelector('.services__prev').addEventListener('click', () => {
-    movePage(dir.prev);
-  });
-  document.querySelector('.services__next').addEventListener('click', () => {
-    movePage(dir.next);
-  });
-  return true;
-};
-
 const filterDesc = desc => {
   const doc = new DOMParser().parseFromString(desc, 'text/html');
 
-  // 스타일, 이미지, figure 제거 및 &nbsp; 처리
   doc.querySelectorAll('*').forEach(el => {
     el.removeAttribute('style');
     if (el.tagName === 'IMG' || el.tagName === 'FIGURE') el.remove();
   });
   doc.body.innerHTML = doc.body.innerHTML.replace(/&nbsp;/g, ' ');
 
-  // "3. 상세내용" 이전의 모든 요소 제거
   const index = [...doc.body.children].findIndex(el => el.textContent.includes('3. 상세내용'));
+  if (index !== -1) [...doc.body.children].slice(0, index + 1).forEach(el => el.remove());
 
-  if (index !== -1) {
-    [...doc.body.children].slice(0, index + 1).forEach(el => el.remove());
-  }
-
-  // "4. 주의사항" 처리
   const warningSection = [...doc.querySelectorAll('p, div')].find(el =>
     el.textContent.includes('4. 주의사항')
   );
   if (warningSection) {
-    warningSection.innerHTML = warningSection.innerHTML.replace(/4\.\s*/, ''); // "4." 제거
+    warningSection.innerHTML = warningSection.innerHTML.replace(/4\.\s*/, '');
     if (warningSection.textContent.trim()) {
       const strongTag = document.createElement('strong');
       strongTag.innerHTML = warningSection.innerHTML;
@@ -224,7 +213,6 @@ const filterDesc = desc => {
     }
   }
 
-  // 최종 결과 반환
   return doc.body.innerText.trim() !== '주의사항'
     ? doc.body.innerHTML.trim()
     : '링크를 방문하여 상세내용을 확인해주세요!';
@@ -232,29 +220,37 @@ const filterDesc = desc => {
 
 const displayDetails = e => {
   const $target = e.target.closest('li');
+  const data = getServices().find(service => service.id === $target.id);
+
+  if (!data) return;
+
   const $map = document.querySelector('#detail__map');
   const $desc = document.querySelector('.detail__desc');
   const $link = document.querySelector('.detail__reservation');
-  const data = getServices().filter(service => service.id === $target.id)[0];
   const $detail = document.querySelector('.detail');
   const $detailCloseBtn = document.querySelector('.detail__close-btn');
 
   $desc.innerHTML = filterDesc(data.desc);
   $link.href = data.url;
 
+  const position = new kakao.maps.LatLng(data.y, data.x);
+  map.setCenter(position);
+  removeMarker();
+  setMarker(position);
+
   $map.style.maxHeight = '60%';
   $desc.style.display = 'block';
   $link.style.display = 'block';
-  removeMarker();
-  map.setCenter(new kakao.maps.LatLng(data.y, data.x));
-  setMarker(new kakao.maps.LatLng(data.y, data.x));
   $detail.classList.add('display');
-  $detailCloseBtn.addEventListener('click', e => {
+
+  $detailCloseBtn.removeEventListener('click', closeDetailHandler);
+  $detailCloseBtn.addEventListener('click', closeDetailHandler);
+
+  function closeDetailHandler() {
     $detail.classList.remove('display');
-  });
+  }
 };
 
-// 서비스 리스트 받아오기
 const getServiceList = async url => {
   const KEY = 'ListPublicReservationEducation';
   const newUrl =
@@ -267,141 +263,91 @@ const getServiceList = async url => {
   try {
     const response = await fetch(newUrl);
     const data = await response.json();
-
     totalResults = data[KEY].list_total_count;
     return data[KEY].row;
   } catch (e) {
-    console.log(e);
+    console.error('Error fetching service list:', e);
+    return [];
   }
 };
 
-$categoryCon.addEventListener('click', e => {
-  if (e.target.tagName !== 'BUTTON') return;
-  console.log(e.target.dataset.category);
-
-  const $$categoryBtns = $categoryCon.querySelectorAll('button');
-  $$categoryBtns.forEach(btn => btn.classList.remove('selected'));
-  e.target.classList.add('selected');
-
-  const category = e.target.dataset.category;
-  searchParams.minclass = category === '전체' ? '' : category.split('/')[0];
-  searchParams.area = '';
-  searchParams.svcname = '';
-  $input.value = '';
-  page = 1;
-  updateSearchParams();
-  initializeServiceList(BASE_URL);
-
-  $$categoryList.classList.remove('active');
-  $closeBtn.style.display = 'none';
-});
-
-$submitBtn.addEventListener('click', e => {
-  console.log($select.value);
-  console.log($input.value);
-
-  searchParams.area = '';
-  searchParams.svcname = '';
-  page = 1;
-
-  searchParams[$select.value] = $input.value;
-
-  updateSearchParams();
-  initializeServiceList(BASE_URL);
-});
-
-$input.addEventListener('keydown', e => {
-  console.log(e.key === 'Enter');
-  if (e.key !== 'Enter') return;
-
-  searchParams.area = '';
-  searchParams.svcname = '';
-  page = 1;
-
-  searchParams[$select.value] = $input.value;
-
-  updateSearchParams();
-  initializeServiceList(BASE_URL);
-});
-
-// TODO: 보기 쉽게 만들기
-const initializeServiceList = baseUrl => {
-  getServiceList(baseUrl)
-    .then(paintHtmlToServiceList)
-    .then(flag => {
-      if (!flag) return;
-      const $$services = document.querySelectorAll('.services__item');
-      $$services.forEach($service => {
-        $service.addEventListener('click', displayDetails);
-      });
-    })
-    .catch(error => {
-      console.error('Error fetching service list:', error);
-    });
+const getServices = () => JSON.parse(localStorage.getItem(SERVICES_KEY)) || [];
+const saveServices = services => localStorage.setItem(SERVICES_KEY, JSON.stringify(services));
+const setServices = item => {
+  const { SVCID, DTLCONT, X, Y, SVCURL } = item;
+  const newService = { id: SVCID, desc: DTLCONT, x: X, y: Y, url: SVCURL };
+  saveServices([...getServices(), newService]);
 };
 
-// TODO: refactoring
 const loadKakaoMaps = () => {
   const script = document.createElement('script');
-  script.type = 'text/javascript';
   script.src = KAKAO_MAP_URL;
+  script.onload = () => kakao.maps.load(initializeMap);
+  script.onerror = () => console.error('Kakao Maps API 로드 오류');
   document.head.appendChild(script);
-
-  script.onload = function () {
-    // API가 로드된 후, kakao.maps.load를 사용하여 초기화
-    kakao.maps.load(function () {
-      initializeMap();
-    });
-  };
-
-  script.onerror = function () {
-    console.error('Kakao Maps API 로드 중 오류가 발생했습니다.');
-  };
 };
 
-loadKakaoMaps();
-
 const initializeMap = () => {
-  const mapContainer = document.getElementById('detail__map'); // HTML에 <div id="map"></div>가 필요합니다.
-
-  // 지도 옵션 설정
-  const mapOptions = {
-    center: new kakao.maps.LatLng(37.5665, 126.978), // 서울의 위도와 경도
-    level: 3, // 지도의 확대 수준
-  };
-
-  // 지도 생성
-  map = new kakao.maps.Map(mapContainer, mapOptions);
-
-  const [x, y] = [126.978, 37.5665];
-  setMarker(new kakao.maps.LatLng(y, x));
+  const mapContainer = document.getElementById('detail__map');
+  map = new kakao.maps.Map(mapContainer, {
+    center: new kakao.maps.LatLng(37.5665, 126.978),
+    level: 3,
+  });
+  setMarker(new kakao.maps.LatLng(37.5665, 126.978));
 };
 
 const setMarker = position => {
-  marker = new kakao.maps.Marker({
-    position: position,
-  });
-
-  // 마커를 지도에 표시
+  marker = new kakao.maps.Marker({ position });
   marker.setMap(map);
 };
 
-const removeMarker = () => {
-  if (marker) marker.setMap(null);
+const removeMarker = () => marker?.setMap(null);
+
+const initializeServiceList = async baseUrl => {
+  try {
+    const services = await getServiceList(baseUrl);
+    if (!paintHtmlToServiceList(services)) return;
+
+    document
+      .querySelectorAll('.services__item')
+      .forEach($service => $service.addEventListener('click', displayDetails));
+  } catch (error) {
+    console.error('Error initializing service list:', error);
+  }
 };
 
-// 사용 예시
-initializeServiceList(BASE_URL);
-$logo.addEventListener('click', e => {
-  $logo.classList.toggle('rotate');
-});
-document.querySelector('.header__menu-btn').addEventListener('click', e => {
-  $$categoryList.classList.add('active');
-  $closeBtn.style.display = 'block';
+const initializeEventListeners = () => {
+  $logo.addEventListener('click', () => $logo.classList.toggle('rotate'));
 
-  // TODO: 함수화
-  $closeBtn.addEventListener('click', e => {
-    $$categoryList.classList.remove('active');
-    $closeBtn.style.display = 'none';
+  $categoryCon.addEventListener('click', e => {
+    if (e.target.tagName !== 'BUTTON') return;
+
+    const $targetBtn = e.target;
+    const category = $targetBtn.dataset.category;
+
+    $categoryCon.querySelectorAll('button').forEach(btn => btn.classList.remove('selected'));
+    $targetBtn.classList.add('selected');
+
+    applyCategorySelection(category);
+    toggleCategoryList(false);
   });
-});
+
+  $submitBtn.addEventListener('click', () => {
+    resetSearchParams();
+    updateSearchParamsAndInitialize();
+  });
+
+  $input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      resetSearchParams();
+      updateSearchParamsAndInitialize();
+    }
+  });
+
+  $closeBtn.addEventListener('click', () => toggleCategoryList(false));
+};
+
+// 초기화 및 이벤트 리스너 설정
+loadKakaoMaps();
+initializeServiceList(BASE_URL);
+initializeEventListeners();
