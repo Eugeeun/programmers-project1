@@ -1,6 +1,9 @@
 'use strict';
 
-import { BASE_URL, SERVICES_KEY, KAKAO_MAP_URL } from './config.js';
+import { BASE_URL, SERVICES_KEY, KAKAO_MAP_URL, PAGE_SIZE, GROUP_SIZE, dir } from './config.js';
+import { swiper } from './swiper.js';
+import { loadKakaoMaps, setMarkerAndCenter, removeMarker } from './map.js';
+import { saveServices, setServices, getServices } from './localStorage.js';
 
 // DOM 요소 선택
 const $categoryCon = document.querySelector('.swiper-wrapper');
@@ -12,8 +15,6 @@ const $closeBtn = document.querySelector('.header__close-menu-btn');
 const $logo = document.querySelector('.header__logo');
 
 // 상수 및 변수
-const PAGE_SIZE = 15;
-const GROUP_SIZE = 3;
 let page = 1; // currentPage
 let totalResults = null;
 
@@ -25,24 +26,6 @@ const searchParams = {
   target: '',
   area: '',
 };
-
-const dir = {
-  prev: 0,
-  next: 1,
-};
-
-let map;
-let marker;
-
-// Swiper 초기화
-const swiper = new Swiper('.header__category-list', {
-  slidesPerView: 'auto',
-  spaceBetween: 20,
-  freeMode: true,
-  grabCursor: true,
-  freeModeSticky: false,
-  freeModeMomentum: false,
-});
 
 // Helper 함수 정의
 const updateSearchParams = () => {
@@ -233,10 +216,8 @@ const displayDetails = e => {
   $desc.innerHTML = filterDesc(data.desc);
   $link.href = data.url;
 
-  const position = new kakao.maps.LatLng(data.y, data.x);
-  map.setCenter(position);
   removeMarker();
-  setMarker(position);
+  setMarkerAndCenter(data.y, data.x);
 
   $map.style.maxHeight = '60%';
   $desc.style.display = 'block';
@@ -270,38 +251,6 @@ const getServiceList = async url => {
     return [];
   }
 };
-
-const getServices = () => JSON.parse(localStorage.getItem(SERVICES_KEY)) || [];
-const saveServices = services => localStorage.setItem(SERVICES_KEY, JSON.stringify(services));
-const setServices = item => {
-  const { SVCID, DTLCONT, X, Y, SVCURL } = item;
-  const newService = { id: SVCID, desc: DTLCONT, x: X, y: Y, url: SVCURL };
-  saveServices([...getServices(), newService]);
-};
-
-const loadKakaoMaps = () => {
-  const script = document.createElement('script');
-  script.src = KAKAO_MAP_URL;
-  script.onload = () => kakao.maps.load(initializeMap);
-  script.onerror = () => console.error('Kakao Maps API 로드 오류');
-  document.head.appendChild(script);
-};
-
-const initializeMap = () => {
-  const mapContainer = document.getElementById('detail__map');
-  map = new kakao.maps.Map(mapContainer, {
-    center: new kakao.maps.LatLng(37.5665, 126.978),
-    level: 3,
-  });
-  setMarker(new kakao.maps.LatLng(37.5665, 126.978));
-};
-
-const setMarker = position => {
-  marker = new kakao.maps.Marker({ position });
-  marker.setMap(map);
-};
-
-const removeMarker = () => marker?.setMap(null);
 
 const initializeServiceList = async baseUrl => {
   try {
