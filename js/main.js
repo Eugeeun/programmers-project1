@@ -1,6 +1,6 @@
 'use strict';
 
-import { BASE_URL, SERVICES_KEY, KAKAO_MAP_URL, PAGE_SIZE, GROUP_SIZE, dir } from './config.js';
+import { BASE_URL, PAGE_SIZE, GROUP_SIZE, dir } from './config.js';
 import { swiper } from './swiper.js';
 import { loadKakaoMaps, setMarkerAndCenter, removeMarker } from './map.js';
 import { saveServices, setServices, getServices } from './localStorage.js';
@@ -13,51 +13,58 @@ const $submitBtn = document.querySelector('.intro__submit-btn > img');
 const $$categoryList = document.querySelector('.header__category-list');
 const $closeBtn = document.querySelector('.header__close-menu-btn');
 const $logo = document.querySelector('.header__logo');
+const $menuOpenBtn = document.querySelector('.header__menu-btn');
 
-// 상수 및 변수
+// 변수
 let page = 1; // currentPage
 let totalResults = null;
 
+// 검색 파라미터
 const searchParams = {
   pageBegin: (page - 1) * PAGE_SIZE + 1,
   pageEnd: page * PAGE_SIZE,
-  minclass: '', // category
+  minclass: '', // 카테고리
   svcname: '',
-  target: '',
+  target: '', // 사용하지 않음
   area: '',
 };
 
-// Helper 함수 정의
-const updateSearchParams = () => {
+// 페이지 업데이트
+const updateParams = () => {
   searchParams.pageBegin = (page - 1) * PAGE_SIZE + 1;
   searchParams.pageEnd = page * PAGE_SIZE;
 };
 
-const resetSearchParams = () => {
+// 카테고리 버튼을 누르면 일부 파라미터 초기화
+const resetParams = () => {
   searchParams.area = '';
   searchParams.svcname = '';
   page = 1;
 };
 
-const updateSearchParamsAndInitialize = () => {
+// 검색시 파라미터를 업데이트하고 로드
+const updateParamsAndLoad = () => {
   searchParams[$select.value] = $input.value;
-  updateSearchParams();
-  initializeServiceList(BASE_URL);
+  updateParams();
+  loadServiceList(BASE_URL);
 };
 
-const applyCategorySelection = category => {
+// 선택된 카테고리로 로드
+const selectCategory = category => {
   searchParams.minclass = category === '전체' ? '' : category.split('/')[0];
-  resetSearchParams();
-  updateSearchParams();
-  initializeServiceList(BASE_URL);
+  resetParams();
+  updateParams();
+  loadServiceList(BASE_URL);
   $input.value = '';
 };
 
-const toggleCategoryList = show => {
+// 모바일버전에서 카테고리 박스 변화
+const toggleCategoryVisibility = show => {
   $$categoryList.classList.toggle('active', show);
   $closeBtn.style.display = show ? 'block' : 'none';
 };
 
+// 리스트의 상태
 const getStatus = status => {
   const statusMap = {
     접수중: ['open', '접수중'],
@@ -69,6 +76,7 @@ const getStatus = status => {
   return statusMap[status] || ['unknown', '알 수 없음'];
 };
 
+// 리스트 템플릿
 const createHtml = item => {
   const { SVCID, IMGURL, SVCSTATNM, SVCNM, PLACENM, USETGTINFO, SVCOPNBGNDT, SVCOPNENDDT } = item;
   const [statusClass, status] = getStatus(SVCSTATNM);
@@ -102,9 +110,10 @@ const createHtml = item => {
   `;
 };
 
-const paintHtmlToServiceList = itemList => {
+const renderServiceList = itemList => {
   const $target = document.querySelector('.services__list');
 
+  // 리스트가 존재하지 않거나 0개라면 기본 템플릿 반환
   if (!itemList || itemList.length === 0) {
     $target.innerHTML = `
       <li class="services__item shadow">
@@ -122,23 +131,24 @@ const paintHtmlToServiceList = itemList => {
   saveServices([]);
   itemList.forEach(setServices);
 
-  $target.innerHTML = itemList.map(createHtml).join('') + getPagination();
+  $target.innerHTML = itemList.map(createHtml).join('') + renderPagination();
 
   document.querySelectorAll('.services__page').forEach($paginationBtn =>
     $paginationBtn.addEventListener('click', e => {
       page = parseInt(e.target.innerText, 10);
-      updateSearchParams();
-      initializeServiceList(BASE_URL);
+      updateParams();
+      loadServiceList(BASE_URL);
     })
   );
 
-  document.querySelector('.services__prev').addEventListener('click', () => movePage(dir.prev));
-  document.querySelector('.services__next').addEventListener('click', () => movePage(dir.next));
+  document.querySelector('.services__prev').addEventListener('click', () => navigatePage(dir.prev));
+  document.querySelector('.services__next').addEventListener('click', () => navigatePage(dir.next));
 
   return true;
 };
 
-const getPagination = () => {
+// 페이지네이션 추가
+const renderPagination = () => {
   const totalPage = Math.ceil(totalResults / PAGE_SIZE);
   const pageGroup = Math.ceil(page / GROUP_SIZE);
   const firstPage = (pageGroup - 1) * GROUP_SIZE + 1;
@@ -160,16 +170,18 @@ const getPagination = () => {
   `;
 };
 
-const movePage = dir => {
+// 페이지 그룹 이전, 다음 기능
+const navigatePage = dir => {
   const nextPage = (Math.ceil(page / GROUP_SIZE) - !dir) * GROUP_SIZE + dir;
   if (nextPage < 1 || nextPage > Math.ceil(totalResults / PAGE_SIZE)) return;
 
   page = nextPage;
-  updateSearchParams();
-  initializeServiceList(BASE_URL);
+  updateParams();
+  loadServiceList(BASE_URL);
 };
 
-const filterDesc = desc => {
+// 상세내용 중 필요한 내용만 필터링
+const cleanDescription = desc => {
   const doc = new DOMParser().parseFromString(desc, 'text/html');
 
   doc.querySelectorAll('*').forEach(el => {
@@ -201,7 +213,8 @@ const filterDesc = desc => {
     : '링크를 방문하여 상세내용을 확인해주세요!';
 };
 
-const displayDetails = e => {
+// 리스트를 클릭하면 디테일한 정보 출력
+const showDetails = e => {
   const $target = e.target.closest('li');
   const data = getServices().find(service => service.id === $target.id);
 
@@ -213,7 +226,7 @@ const displayDetails = e => {
   const $detail = document.querySelector('.detail');
   const $detailCloseBtn = document.querySelector('.detail__close-btn');
 
-  $desc.innerHTML = filterDesc(data.desc);
+  $desc.innerHTML = cleanDescription(data.desc);
   $link.href = data.url;
 
   removeMarker();
@@ -224,15 +237,14 @@ const displayDetails = e => {
   $link.style.display = 'block';
   $detail.classList.add('display');
 
+  // 모바일 버전에서 닫기 버튼 중복 이벤트 등록 방지
+  const closeDetailHandler = () => $detail.classList.remove('display');
   $detailCloseBtn.removeEventListener('click', closeDetailHandler);
   $detailCloseBtn.addEventListener('click', closeDetailHandler);
-
-  function closeDetailHandler() {
-    $detail.classList.remove('display');
-  }
 };
 
-const getServiceList = async url => {
+// 파라미터를 읽은 후 해당 주소로 fetch실행
+const fetchServiceList = async url => {
   const KEY = 'ListPublicReservationEducation';
   const newUrl =
     url +
@@ -252,19 +264,21 @@ const getServiceList = async url => {
   }
 };
 
-const initializeServiceList = async baseUrl => {
+// 데이터를 성공적으로 받아왔다면 화면에 로드 후 이벤트 리스너 등록
+const loadServiceList = async baseUrl => {
   try {
-    const services = await getServiceList(baseUrl);
-    if (!paintHtmlToServiceList(services)) return;
+    const services = await fetchServiceList(baseUrl);
+    if (!renderServiceList(services)) return;
 
     document
       .querySelectorAll('.services__item')
-      .forEach($service => $service.addEventListener('click', displayDetails));
+      .forEach($service => $service.addEventListener('click', showDetails));
   } catch (error) {
     console.error('Error initializing service list:', error);
   }
 };
 
+// 이벤트 리스너 초기화
 const initializeEventListeners = () => {
   $logo.addEventListener('click', () => $logo.classList.toggle('rotate'));
 
@@ -277,26 +291,27 @@ const initializeEventListeners = () => {
     $categoryCon.querySelectorAll('button').forEach(btn => btn.classList.remove('selected'));
     $targetBtn.classList.add('selected');
 
-    applyCategorySelection(category);
-    toggleCategoryList(false);
+    selectCategory(category);
+    toggleCategoryVisibility(false);
   });
 
   $submitBtn.addEventListener('click', () => {
-    resetSearchParams();
-    updateSearchParamsAndInitialize();
+    resetParams();
+    updateParamsAndLoad();
   });
 
   $input.addEventListener('keydown', e => {
     if (e.key === 'Enter') {
-      resetSearchParams();
-      updateSearchParamsAndInitialize();
+      resetParams();
+      updateParamsAndLoad();
     }
   });
 
-  $closeBtn.addEventListener('click', () => toggleCategoryList(false));
+  $menuOpenBtn.addEventListener('click', () => toggleCategoryVisibility(true));
+  $closeBtn.addEventListener('click', () => toggleCategoryVisibility(false));
 };
 
-// 초기화 및 이벤트 리스너 설정
+// 초기화
 loadKakaoMaps();
-initializeServiceList(BASE_URL);
+loadServiceList(BASE_URL);
 initializeEventListeners();

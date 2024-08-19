@@ -170,7 +170,6 @@
 
 .detail__map,
 .detail__desc {
-  border: 1px solid lightgray; /*지울 것*/
   border-radius: var(--border-radius-default);
 }
 
